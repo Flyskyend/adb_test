@@ -12,4 +12,10 @@ for filename in glob.glob(path):
     
     print("===========================")
 
-exit()
+from PIL import Image,ImageDraw
+image_path='XXXXXXXXXX.jpg'
+image=Image.open(image_path)
+draw = ImageDraw.Draw(image)
+
+draw.polygon([(902,1217),(1288,1215),(1288,1269),(903,1271)], outline=(255,0,0))
+image.show()
