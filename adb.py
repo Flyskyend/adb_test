@@ -1,10 +1,29 @@
 import os
 
-#screenshot download
-os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.png")
-os.system("adb.exe pull /sdcard/screenshot.png ./")
+class ADB_Util:
+    # def __init__(self) -> None:
+    #     print("adb devices")
+    #     os.system("adb.exe devices")
 
-exit()
+    # 模拟点击(540, 1104)坐标
+    def tap(x, y):
+        print("### adb shell input tap " + str(x) +" " + str(y))
+        os.system("adb.exe shell input tap " + str(x) +" " + str(y))
+
+    # screenshot & download
+    def getScreenshot(path):
+        print("### adb pull /sdcard/screenshot.png " + path)
+        os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.png")
+        os.system("adb.exe pull /sdcard/screenshot.png ./")
+    
+
+# screenshot_path = "./screenshot.png"
+# ADB_Util.tap(540, 1104)
+# ADB_Util.getScreenshot(screenshot_path)
+# util = ADB_Util()
+
+
+# exit()
 
 # adb shell "dumpsys window | grep mCurrentFocus"
 
