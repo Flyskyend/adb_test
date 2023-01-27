@@ -15,6 +15,15 @@ class ADB_Util:
         print("### adb pull /sdcard/screenshot.png " + path)
         os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.png")
         os.system("adb.exe pull /sdcard/screenshot.png ./")
+
+    # def openApp():
+    #     print("### adb shell am start -W -n com.richfit.qixin.partybuild.product/com.richfit.partybuild.activity.PBMainActivity")
+    #     os.system("adb shell am start -W -n com.richfit.qixin.partybuild.product/com.richfit.partybuild.activity.PBMainActivity")
+
+    def openCCBLifeApp():
+        print("### adb shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
+        os.system("adb shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
+        
     
 
 # screenshot_path = "./screenshot.png"
