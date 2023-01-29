@@ -2,9 +2,10 @@ import easyocr
 import glob
 from PIL import Image,ImageDraw
 
-path = 'trxf/trxf_*.jpg'
+# path = 'trxf/trxf_*.jpg'
+path = 'trxf/trxf_11.jpg'
+reader = easyocr.Reader(['ch_sim','en'], gpu=True) # this needs to run only once to load the model into memory
 for filename in glob.glob(path):
-    reader = easyocr.Reader(['ch_sim','en'], gpu=True) # this needs to run only once to load the model into memory
     result = reader.readtext(filename)
     print(result)
 

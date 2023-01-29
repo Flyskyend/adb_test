@@ -5,16 +5,36 @@ class ADB_Util:
     #     print("adb devices")
     #     os.system("adb.exe devices")
 
+    def sendCommand(cmd):
+        print("### " + cmd)
+        os.system(cmd)
+
     # 模拟点击(540, 1104)坐标
     def tap(x, y):
         print("### adb shell input tap " + str(x) +" " + str(y))
         os.system("adb.exe shell input tap " + str(x) +" " + str(y))
+    
+    # 模拟滑动，从(250,250)滑动到(300,300)
+    def swipe(x1, y1, x2, y2):
+        print("### adb shell input swipe " + str(x1) + " " + str(y1) + " " + str(x2) + " " + str(y2))
+        os.system("adb.exe shell input swipe " + str(x1) + " " + str(y1) + " " + str(x2) + " " + str(y2))
+
+    def swipeCenterUp():
+        ADB_Util.swipe(540, 1000, 540, 1340)
+
+    def swipeCenterDown():
+        ADB_Util.swipe(540, 1340, 540, 1000)    
 
     # screenshot & download
     def getScreenshot(path):
-        print("### adb pull /sdcard/screenshot.png " + path)
-        os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.png")
-        os.system("adb.exe pull /sdcard/screenshot.png ./")
+        print("### adb pull /sdcard/screenshot.jpg " + path)
+        os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.jpg")
+        os.system("adb.exe pull /sdcard/screenshot.jpg " + path)
+
+    # 获取屏幕分辨率
+    def getScreenSize():
+        print("### adb shell wm size")
+        os.system("adb.exe shell wm size")
 
     # def openApp():
     #     print("### adb shell am start -W -n com.richfit.qixin.partybuild.product/com.richfit.partybuild.activity.PBMainActivity")
@@ -22,11 +42,11 @@ class ADB_Util:
 
     def openCCBLifeApp():
         print("### adb shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
-        os.system("adb shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
+        os.system("adb.exe shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
         
     
 
-# screenshot_path = "./screenshot.png"
+# screenshot_path = "./screenshot.jpg"
 # ADB_Util.tap(540, 1104)
 # ADB_Util.getScreenshot(screenshot_path)
 # util = ADB_Util()
