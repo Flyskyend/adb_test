@@ -20,10 +20,10 @@ class ADB_Util:
         os.system("adb.exe shell input swipe " + str(x1) + " " + str(y1) + " " + str(x2) + " " + str(y2))
 
     def swipeCenterUp():
-        ADB_Util.swipe(540, 1000, 540, 1340)
+        ADB_Util.swipe(540, 1340, 540, 1000)    
 
     def swipeCenterDown():
-        ADB_Util.swipe(540, 1340, 540, 1000)    
+        ADB_Util.swipe(540, 1000, 540, 1340)
 
     # screenshot & download
     def getScreenshot(path):
@@ -44,6 +44,13 @@ class ADB_Util:
         print("### adb shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
         os.system("adb.exe shell am start -W -n com.ccb.longjiLife/com.ccb.longjiLife.MainActivity")
         
+    def backToHome():
+        print("### adb shell am start -W -n com.miui.home/com.miui.home.launcher.Launcher")
+        os.system("adb.exe shell am start -W -n com.miui.home/com.miui.home.launcher.Launcher")
+
+    def inputKeyBack():
+        print("### adb shell input keyevent KEYCODE_BACK")
+        os.system("adb.exe shell input keyevent KEYCODE_BACK")
     
 
 # screenshot_path = "./screenshot.jpg"

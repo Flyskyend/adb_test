@@ -9,7 +9,7 @@ class SR_Util:
     ocrreader = easyocr.Reader(['ch_sim','en'], gpu=True) # this needs to run only once to load the model into memory
 
     def getSubImageCoord(image_path, sub_path, threshold):
-        print("image_path:", image_path, "sub_path:", sub_path)
+        print("image_path:", image_path, "sub_path:", sub_path, "threshold:", threshold)
         img_rgb = cv.imread(image_path)
         img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
         # template = cv.imread('trxf/icon_circle.jpg', 0)
