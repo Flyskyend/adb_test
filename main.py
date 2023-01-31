@@ -7,7 +7,9 @@ CIRCLE_PATH = "./trxf/icon_circle.jpg"
 CIRCLE_PATH2 = "./trxf/icon_circle2.jpg"
 SQUARE_PATH = "./trxf/icon_square.jpg"
 
-def CurrentStringRecAndTap(str):
+ADB_Util.getScreenSize()
+
+def CurrentStringRecAndTap(str, offset = [0, 0]):
     ADB_Util.getScreenshot(SCREENSHOT_PATH)
     str_coord = []
     str_coord = SR_Util.getStringCoord(SCREENSHOT_PATH, str)
@@ -15,7 +17,7 @@ def CurrentStringRecAndTap(str):
         print("Can not find", str, "in current screen.")
         return str_coord
     coord = SR_Util.getCenter(str_coord[0])
-    ADB_Util.tap(coord[0], coord[1])
+    ADB_Util.tap(coord[0] + offset[0], coord[1] + offset[1])
     return str_coord
 
 def CurrentFirstSubImageRecAndTap(str):
@@ -30,7 +32,7 @@ def CurrentFirstSubImageRecAndTap(str):
 
 def SignInCCBLife():
     ADB_Util.openCCBLifeApp()
-    time.sleep(2)
+    # time.sleep(2)
     res = []
     ADB_Util.swipeCenterUp()
     res = CurrentStringRecAndTap("签到")
@@ -81,4 +83,12 @@ def SignInTRXF():
 
 
 # print(dir(ADB_Util))
+SignInCCBLife()
 
+
+for i in range(0, 7):
+    ADB_Util.swipeCenterLeft()
+for i in range(0, 3):
+    ADB_Util.swipeCenterRight()
+CurrentStringRecAndTap("CNPC", [0, -20])
+CurrentStringRecAndTap("铁人先锋", [0, -10])

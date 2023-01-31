@@ -1,9 +1,14 @@
 import os
+import re
 
 class ADB_Util:
     # def __init__(self) -> None:
     #     print("adb devices")
     #     os.system("adb.exe devices")
+    SCREEN_SIZE = [0,0]
+    SCREEN_CENTER_X = 0
+    SCREEN_CENTER_Y = 0
+    SCREEN_CENTER_SWIPE_LENGTH = 200
 
     def sendCommand(cmd):
         print("### " + cmd)
@@ -20,10 +25,16 @@ class ADB_Util:
         os.system("adb.exe shell input swipe " + str(x1) + " " + str(y1) + " " + str(x2) + " " + str(y2))
 
     def swipeCenterUp():
-        ADB_Util.swipe(540, 1340, 540, 1000)    
+        ADB_Util.swipe(ADB_Util.SCREEN_CENTER_X, ADB_Util.SCREEN_CENTER_Y + ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_X, ADB_Util.SCREEN_CENTER_Y-ADB_Util.SCREEN_CENTER_SWIPE_LENGTH)    
 
     def swipeCenterDown():
-        ADB_Util.swipe(540, 1000, 540, 1340)
+        ADB_Util.swipe(ADB_Util.SCREEN_CENTER_X, ADB_Util.SCREEN_CENTER_Y - ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_X, ADB_Util.SCREEN_CENTER_Y + ADB_Util.SCREEN_CENTER_SWIPE_LENGTH)
+
+    def swipeCenterLeft():
+        ADB_Util.swipe(ADB_Util.SCREEN_CENTER_X + ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y, ADB_Util.SCREEN_CENTER_X - ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y)
+        
+    def swipeCenterRight():
+        ADB_Util.swipe(ADB_Util.SCREEN_CENTER_X - ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y, ADB_Util.SCREEN_CENTER_X + ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y)
 
     # screenshot & download
     def getScreenshot(path):
@@ -34,7 +45,12 @@ class ADB_Util:
     # 获取屏幕分辨率
     def getScreenSize():
         print("### adb shell wm size")
-        os.system("adb.exe shell wm size")
+        ret = os.popen("adb.exe shell wm size").read()
+        ADB_Util.SCREEN_SIZE = [ int(x) for x in re.findall(r": (.*)x(.*)\n", ret)[0]]
+        ADB_Util.SCREEN_CENTER_X = int(ADB_Util.SCREEN_SIZE[0]/2)
+        ADB_Util.SCREEN_CENTER_Y = int(ADB_Util.SCREEN_SIZE[1]/2)
+        print("Screen Size:", ADB_Util.SCREEN_SIZE[0], "x", ADB_Util.SCREEN_SIZE[1], ", Center: (", ADB_Util.SCREEN_CENTER_X, ",", ADB_Util.SCREEN_CENTER_Y, ")")
+
 
     # def openApp():
     #     print("### adb shell am start -W -n com.richfit.qixin.partybuild.product/com.richfit.partybuild.activity.PBMainActivity")
