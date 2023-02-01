@@ -9,26 +9,61 @@ SQUARE_PATH = "./trxf/icon_square.jpg"
 
 ADB_Util.getScreenSize()
 
-def CurrentStringRecAndTap(str, offset = [0, 0]):
-    ADB_Util.getScreenshot(SCREENSHOT_PATH)
+def CurrentStringRecAndTap(str_to_tap, offset = [0, 0]):
     str_coord = []
-    str_coord = SR_Util.getStringCoord(SCREENSHOT_PATH, str)
-    if not str_coord:
-        print("Can not find", str, "in current screen.")
+    for time in range(0, 5):
+        ADB_Util.getScreenshot(SCREENSHOT_PATH)
+        str_coord = SR_Util.getStringCoord(SCREENSHOT_PATH, str_to_tap)
+        if not str_coord:
+            print("Can not find", str_to_tap, "in current screen. Restarting...[" + str(time)+"]")
+            continue
+        coord = SR_Util.getCenter(str_coord[0])
+        ADB_Util.tap(coord[0] + offset[0], coord[1] + offset[1])
         return str_coord
-    coord = SR_Util.getCenter(str_coord[0])
-    ADB_Util.tap(coord[0] + offset[0], coord[1] + offset[1])
-    return str_coord
+    else:
+        return str_coord
 
-def CurrentFirstSubImageRecAndTap(str):
-    ADB_Util.getScreenshot(SCREENSHOT_PATH)
+def CurrentStringRecAndTapNearOne(str_to_tap, str_near, offset = [0, 0]):
+    str_coord = []
+    for time in range(0, 5):
+        ADB_Util.getScreenshot(SCREENSHOT_PATH)
+        str_coord = SR_Util.getStringCoord(SCREENSHOT_PATH, str_to_tap)
+        str_near_coord = SR_Util.getStringCoord(SCREENSHOT_PATH, str_near)
+        if not str_coord:
+            print("Can not find", str_to_tap, "in current screen. Restarting...[" + str(time)+"]")
+            continue
+        if not str_near_coord:
+            print("Can not find", str_near, "in current screen. Restarting...[" + str(time)+"]")
+            continue
+        near_coord = SR_Util.getCenter(str_near_coord[0])
+        for c in str_coord:
+            coord = SR_Util.getCenter(c)
+            if coord[1] > near_coord[1] :
+                break
+        ADB_Util.tap(coord[0] + offset[0], coord[1] + offset[1])
+        return str_coord
+    else:
+        return str_coord
+
+def CurrentFirstSubImageRecAndTap(str_to_tap):
     image_coord = []
-    image_coord = SR_Util.getSubImageCoord(SCREENSHOT_PATH, str, 0.8)
-    if not image_coord:
-        print("Can not find circle icon in current screen.")
+    for time in range(0, 5):
+        ADB_Util.getScreenshot(SCREENSHOT_PATH)
+        image_coord = SR_Util.getSubImageCoord(SCREENSHOT_PATH, str_to_tap, 0.8)
+        if not image_coord:
+            print("Can not find circle icon in current screen. Restarting...[" + str(time)+"]")
+            continue
+        ADB_Util.tap(image_coord[0][0], image_coord[0][1])
+        return image_coord[0]
+    else:
         return image_coord
-    ADB_Util.tap(image_coord[0][0], image_coord[0][1])
-    return image_coord[0]
+
+def CurrentHasString(string):
+    ADB_Util.getScreenshot(SCREENSHOT_PATH)
+    if SR_Util.getStringCoord(SCREENSHOT_PATH, string) :
+        return True
+    return False
+
 
 def SignInCCBLife():
     ADB_Util.openCCBLifeApp()
@@ -47,6 +82,7 @@ def SignInCCBLife():
     CurrentStringRecAndTap("立即签到")
     CurrentStringRecAndTap("我知道了")
     ADB_Util.backToHome()
+    time.sleep(1)
 
 def CurrentTapAnswer():
     ADB_Util.getScreenshot(SCREENSHOT_PATH)
@@ -83,12 +119,26 @@ def SignInTRXF():
 
 
 # print(dir(ADB_Util))
-SignInCCBLife()
 
+# SignInCCBLife()
 
-for i in range(0, 7):
-    ADB_Util.swipeCenterLeft()
-for i in range(0, 3):
-    ADB_Util.swipeCenterRight()
-CurrentStringRecAndTap("CNPC", [0, -20])
-CurrentStringRecAndTap("铁人先锋", [0, -10])
+# for i in range(0, 7):
+#     ADB_Util.swipeCenterLeft()
+# for i in range(0, 3):
+#     ADB_Util.swipeCenterRight()
+# CurrentStringRecAndTap("CNPC", [0, -20])
+# CurrentStringRecAndTap("铁人先锋", [0, -10])
+# CurrentStringRecAndTap("学习", [0, -10])
+# CurrentStringRecAndTap("在线答题", [0, -10])
+for j in range(0, 3):
+    CurrentStringRecAndTapNearOne("立即考试", "月月学")
+    CurrentStringRecAndTap("开始答题")
+    time.sleep(1)
+    for i in range(0, 3):
+        CurrentFirstSubImageRecAndTap(CIRCLE_PATH2)
+        CurrentStringRecAndTap("下一题")
+        if CurrentHasString("没有下一题了") :
+            break
+    CurrentStringRecAndTap("我要提交")
+    CurrentStringRecAndTap("确认提交")
+    ADB_Util.inputKeyBack()
