@@ -15,7 +15,8 @@ class ADB_Util:
         os.system(cmd)
 
     # 模拟点击(540, 1104)坐标
-    def tap(x, y):
+    def tap(coord):
+        x, y = coord
         print("### adb shell input tap " + str(x) +" " + str(y))
         os.system("adb.exe shell input tap " + str(x) +" " + str(y))
     
@@ -70,7 +71,7 @@ class ADB_Util:
     
 
 # screenshot_path = "./screenshot.jpg"
-# ADB_Util.tap(540, 1104)
+# ADB_Util.tap([540, 1104])
 # ADB_Util.getScreenshot(screenshot_path)
 # util = ADB_Util()
 

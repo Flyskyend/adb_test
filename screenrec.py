@@ -34,10 +34,12 @@ class SR_Util:
     
     def getStringCoord(image_path, str):
         result = SR_Util.ocrreader.readtext(image_path)
+        ret = []
         for r in result:
             if str in r[1]:
                 print(r)
-                return r
+                ret.append(r)
+        return ret
         # image=Image.open(image_path)
         # draw = ImageDraw.Draw(image)
         # for i in range(0, len(result)):

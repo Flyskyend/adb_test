@@ -4,12 +4,13 @@ from matplotlib import pyplot as plt
 import glob
 
 # path = 'pubg/pubg_1.jpg'
-path = 'trxf/trxf_12.jpg'
+# path = 'trxf/trxf_12.jpg'
+path = './screenshot.jpg'
 for filename in glob.glob(path):
     print('read ', filename)
     img_rgb = cv.imread(filename)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    template = cv.imread('trxf/icon_circle.jpg', 0)
+    template = cv.imread('./icon_x.jpg', 0)
     # template = cv.imread('pubg/pubg_point_yellow.jpg', 0)
     w, h = template.shape[::-1]
     res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
