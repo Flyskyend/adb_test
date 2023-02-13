@@ -1,5 +1,6 @@
 import os
 import re
+import time
 
 class ADB_Util:
     # def __init__(self) -> None:
@@ -39,6 +40,7 @@ class ADB_Util:
 
     # screenshot & download
     def getScreenshot(path="./screenshot.jpg"):
+        time.sleep(2)
         print("### adb pull /sdcard/screenshot.jpg " + path)
         os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.jpg")
         os.system("adb.exe pull /sdcard/screenshot.jpg " + path)

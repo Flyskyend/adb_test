@@ -106,9 +106,9 @@ def SignInTRXF():
 
     for i in range(0, 7):
         ADB_Util.swipeCenterLeft()
-    for i in range(0, 3):
+    for i in range(0, 4):
         ADB_Util.swipeCenterRight()
-    CurrentStringRecAndTap("CNPC", [0, -30])
+    CurrentStringRecAndTap("CNPC", [0, -50])
     CurrentStringRecAndTap("铁人先锋", [0, -10])
     CurrentStringRecAndTap("学习", [0, -10], -1)
     CurrentStringRecAndTap("在线答题", [0, -10])
@@ -118,8 +118,8 @@ def SignInTRXF():
         time.sleep(1)
         for i in range(0, 3):
             CurrentFirstSubImageRecAndTap(CIRCLE_PATH2)
-            CurrentStringRecAndTap("下一题")
-            if CurrentHasString("没有下一题了") :
+            res = CurrentStringRecAndTap("下一题")
+            if CurrentHasString("没有下一题了") or not res:
                 break
         CurrentStringRecAndTap("我要提交")
         CurrentStringRecAndTap("确认提交")
