@@ -1,0 +1,5 @@
+SCREENSHOT_PATH = "./screenshot.jpg"
+CIRCLE_PATH = "./icon/icon_circle.jpg"
+CIRCLE_PATH2 = "./icon/icon_circle2.jpg"
+SQUARE_PATH = "./icon/icon_square.jpg"
+X_PATH = "./icon/icon_x.jpg"

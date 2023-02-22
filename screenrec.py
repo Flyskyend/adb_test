@@ -4,10 +4,12 @@ from matplotlib import pyplot as plt
 import glob
 import easyocr
 from PIL import Image,ImageDraw
+from adb import ADB_Util
+import config
 
 class SR_Util:
     ocrreader = easyocr.Reader(['ch_sim','en'], gpu=True) # this needs to run only once to load the model into memory
-
+    
     def getSubImageCoord(image_path, sub_path, threshold):
         print("image_path:", image_path, "sub_path:", sub_path, "threshold:", threshold)
         img_rgb = cv.imread(image_path)
@@ -60,15 +62,38 @@ class SR_Util:
         # print([int(x), int(y)])
         return [int(x), int(y)]
     
-    def getAnswer(image_path):
-        result = SR_Util.ocrreader.readtext(image_path)
-        for i in range(0, len(result)):
-            if "正确答案" in result[i][1]:
-                answer = result[i][1].split(":")[1].split(" ")[-1]
+    def isSingleChoice(image_path):
+        if SR_Util.getSubImageCoord(image_path, config.CIRCLE_PATH, 0.8):
+            return True
+        else:
+            return False
+        
+    def hasChoice(string):
+        if "1" in string or "2" in string or "3" in string or "4" in string:
+            return True
+        else:
+            return False
+        
+    def getScreenshotandRead(image_path):
+        ADB_Util.getScreenshot(image_path)
+        return SR_Util.ocrreader.readtext(image_path)
+    
+    def getAnswer(image_path, read_result):
+        for i in range(0, len(read_result)):
+            if "正确答案" in read_result[i][1]:
+                answer = read_result[i][1]
+                while not "确认答案" in read_result[i+1][1]:
+                    answer += read_result[i+1][1]
+                    i+=1
+                print(answer)
+                answer = answer.split(":")[1].split(" ")[-1]
                 if answer[0].isdigit() and answer[1] == "," :
                     answer = answer.split(",")
                 print("正确答案: ", answer)
                 return answer
+
+    
+
         
 
         
