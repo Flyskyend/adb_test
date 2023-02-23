@@ -145,6 +145,7 @@ def SignInTRXF():
     CurrentStringRecAndTap("CNPC", [0, -50])
     CurrentStringRecAndTap("铁人先锋", [0, -10])
     CurrentStringRecAndTap("学习", [0, -10], -1)
+    time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
     for j in range(0, 3):
         CurrentStringRecAndTapNearOne("立即考试", "月月学")
@@ -171,8 +172,16 @@ def SignInTRXF():
             time.sleep(1)
         CurrentTapAnswer()
         CurrentStringRecAndTap("确认答案")
-        CurrentStringRecAndTap("下一题")
-    
+        if i == 2:
+            CurrentStringRecAndTap("完成")
+        else:
+            CurrentStringRecAndTap("下一题")
+    CurrentStringRecAndTap("确定")
+
+    CurrentStringRecAndTap("学习卡")
+    CurrentStringRecAndTap("确认收藏")
+    ADB_Util.inputKeyBack()
+    ADB_Util.backToHome()
 
 
 # print(dir(ADB_Util))
