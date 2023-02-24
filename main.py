@@ -63,12 +63,52 @@ def CurrentHasString(string):
 def CurrentTapAnswer():
     result = SR_Util.getScreenshotandRead(config.SCREENSHOT_PATH)
     isSingleChoice = SR_Util.isSingleChoice(config.SCREENSHOT_PATH)
-    answer = SR_Util.getAnswer(config.SCREENSHOT_PATH, result)
+    answer = SR_Util.getAnswer(config.SCREENSHOT_PATH, result, isSingleChoice)
 
     if isSingleChoice:
-        str_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, answer)
-        str_center = SR_Util.getCenter(str_coord[0][0])
-        ADB_Util.tap(str_center)
+        while answer:
+            circle_coord = SR_Util.getSubImageCoord(config.SCREENSHOT_PATH, config.CIRCLE_PATH, 0.8)
+            i_begin = 0
+            tmp = []
+            for i in range(0, len(result)):
+                if i_begin == 0 and "每日答题" in result[i][1]:
+                    i_begin = i + 1
+                if "解析" in result[i][1] or "确认答案" in result[i][1]:
+                    break
+                if i_begin !=0:
+                    tmp.append([SR_Util.getCenter(result[i][0]), result[i][1]])
+            
+            i = 0
+            cc_ptr = 0
+            while i < len(tmp):
+                if not (circle_coord[cc_ptr][1] + 25 > tmp[i][0][1] and circle_coord[cc_ptr][1] - 25 < tmp[i][0][1]):
+                    i += 1
+                else:
+                    break
+                
+            choices = []
+            while i < len(tmp):
+                if circle_coord[cc_ptr][1] + 25 > tmp[i][0][1] and circle_coord[cc_ptr][1] - 25 < tmp[i][0][1]:
+                    if cc_ptr >= len(choices):
+                        choices.append(tmp[i][1])
+                    else:
+                        choices[cc_ptr] += tmp[i][1]
+                else:
+                    cc_ptr += 1
+                    if cc_ptr >= len(circle_coord):
+                        break
+                    continue
+                i += 1                    
+
+            for i in range(0, len(choices)):
+                if answer in choices[i]:
+                    answer = []
+                    ADB_Util.tap(circle_coord[i])
+                    break
+            if answer:
+                ADB_Util.swipeCenterDown()
+                result = SR_Util.getScreenshotandRead(config.SCREENSHOT_PATH)
+
     else:
         square_coord = SR_Util.getSubImageCoord(config.SCREENSHOT_PATH, config.SQUARE_PATH, 0.8)
         choices = [[0, 0], [0, 0], [0, 0], [0, 0]]
@@ -163,7 +203,7 @@ def SignInTRXF():
         ADB_Util.inputKeyBack()
     ADB_Util.inputKeyBack()
 
-    CurrentStringRecAndTap("我的")
+    CurrentStringRecAndTap("我的", [0,0], -1)
     for i in range(0, 3):
         while True:
             res = CurrentStringRecAndTap("查看解析")
@@ -186,6 +226,6 @@ def SignInTRXF():
 
 # print(dir(ADB_Util))
 
-# SignInCCBLife()
-# SignInTRXF()
+SignInCCBLife()
+SignInTRXF()
 

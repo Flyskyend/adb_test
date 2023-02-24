@@ -78,18 +78,20 @@ class SR_Util:
         ADB_Util.getScreenshot(image_path)
         return SR_Util.ocrreader.readtext(image_path)
     
-    def getAnswer(image_path, read_result):
+    def getAnswer(image_path, read_result, isSingleChoice):
         for i in range(0, len(read_result)):
             if "正确答案" in read_result[i][1]:
                 answer = read_result[i][1]
                 while not "确认答案" in read_result[i+1][1]:
                     answer += read_result[i+1][1]
                     i+=1
-                print(answer)
-                answer = answer.split(":")[1].split(" ")[-1]
+                # print(answer)
+                answer = answer.split(":")[1].strip()
+                print("正确答案:", answer)
+                if isSingleChoice:
+                    return answer
                 if answer[0].isdigit() and answer[1] == "," :
                     answer = answer.split(",")
-                print("正确答案: ", answer)
                 return answer
 
     
