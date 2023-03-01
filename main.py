@@ -184,11 +184,13 @@ def SignInTRXF():
         ADB_Util.swipeCenterRight()
     CurrentStringRecAndTap("CNPC", [0, -50])
     CurrentStringRecAndTap("铁人先锋", [0, -10])
+    while not CurrentHasString("我的") :
+        continue
     CurrentStringRecAndTap("学习", [0, -10], -1)
     time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
     for j in range(0, 3):
-        CurrentStringRecAndTapNearOne("立即考试", "月月学")
+        CurrentStringRecAndTapNearOne("立即考试", "青年答题")
         CurrentStringRecAndTap("开始答题")
         time.sleep(1)
         for i in range(0, 3):
