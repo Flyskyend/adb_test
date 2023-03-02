@@ -88,16 +88,11 @@ def CurrentTapAnswer():
                 
             choices = []
             while i < len(tmp):
-                if circle_coord[cc_ptr][1] + 25 > tmp[i][0][1] and circle_coord[cc_ptr][1] - 25 < tmp[i][0][1]:
-                    if cc_ptr >= len(choices):
-                        choices.append(tmp[i][1])
-                    else:
-                        choices[cc_ptr] += tmp[i][1]
+                if cc_ptr >= len(circle_coord) or not (circle_coord[cc_ptr][1] + 25 > tmp[i][0][1] and circle_coord[cc_ptr][1] - 25 < tmp[i][0][1]):
+                    choices[cc_ptr - 1] += tmp[i][1]
                 else:
+                    choices.append(tmp[i][1])
                     cc_ptr += 1
-                    if cc_ptr >= len(circle_coord):
-                        break
-                    continue
                 i += 1                    
 
             for i in range(0, len(choices)):
@@ -189,6 +184,7 @@ def SignInTRXF():
     CurrentStringRecAndTap("学习", [0, -10], -1)
     time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
+    ADB_Util.swipeCenterUp()
     for j in range(0, 3):
         CurrentStringRecAndTapNearOne("立即考试", "青年答题")
         CurrentStringRecAndTap("开始答题")
@@ -224,9 +220,6 @@ def SignInTRXF():
     CurrentStringRecAndTap("确认收藏")
     ADB_Util.inputKeyBack()
     ADB_Util.backToHome()
-
-
-# print(dir(ADB_Util))
 
 SignInCCBLife()
 SignInTRXF()
