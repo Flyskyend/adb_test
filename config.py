@@ -1,5 +1,7 @@
 SCREENSHOT_PATH = "./screenshot.jpg"
+RESULT_PATH = "./result.jpg"
 CIRCLE_PATH = "./icon/icon_circle.jpg"
 CIRCLE_PATH2 = "./icon/icon_circle2.jpg"
 SQUARE_PATH = "./icon/icon_square.jpg"
+SQUARE_PATH2 = "./icon/icon_square2.jpg"
 X_PATH = "./icon/icon_x.jpg"

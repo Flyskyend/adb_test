@@ -87,6 +87,9 @@ class SR_Util:
                     i+=1
                 # print(answer)
                 answer = answer.split(":")[1].strip()
+                for a in answer:
+                    if not ('\u4e00' <= a <= '\u9fff' or 'a' <= a <= 'z' or 'A' <= a <= 'Z' or '0' <= a <= '9'):
+                        answer = answer.replace(a, "")
                 print("正确答案:", answer)
                 if isSingleChoice:
                     return answer

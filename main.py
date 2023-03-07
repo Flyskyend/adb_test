@@ -53,12 +53,36 @@ def CurrentFirstSubImageRecAndTap(sub_image_path):
         return image_coord[0]
     else:
         return image_coord
+    
+def CurrentTapFirstCircleOrAllSquare():
+    image_coord = []
+    for time in range(0, 5):
+        ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
+        image_coord = SR_Util.getSubImageCoord(config.SCREENSHOT_PATH, config.CIRCLE_PATH2, 0.8)
+        if not image_coord:
+            print("Can not find circle icon in current screen. Restarting...[" + str(time)+"]")
+            image_coord = SR_Util.getSubImageCoord(config.SCREENSHOT_PATH, config.SQUARE_PATH2, 0.8)
+            if not image_coord:
+                print("Can not find square icon in current screen. Restarting...[" + str(time)+"]")
+                continue
+            else:
+                for coord in image_coord:
+                    ADB_Util.tap(coord)
+                return image_coord
+        ADB_Util.tap(image_coord[0])
+        return image_coord[0]
+    else:
+        return image_coord
 
 def CurrentHasString(string):
     ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
     if SR_Util.getStringCoord(config.SCREENSHOT_PATH, string) :
         return True
     return False
+
+def WaitForString(string):
+    while not CurrentHasString(string) :
+        continue
 
 def CurrentTapAnswer():
     result = SR_Util.getScreenshotandRead(config.SCREENSHOT_PATH)
@@ -96,7 +120,11 @@ def CurrentTapAnswer():
                 i += 1                    
 
             for i in range(0, len(choices)):
-                if answer in choices[i]:
+                choice = choices[i]
+                for c in choice:
+                    if not ('\u4e00' <= c <= '\u9fff' or 'a' <= c <= 'z' or 'A' <= c <= 'Z' or '0' <= c <= '9'):
+                        choice = choice.replace(c, "")
+                if answer in choice:
                     answer = []
                     ADB_Util.tap(circle_coord[i])
                     break
@@ -179,25 +207,22 @@ def SignInTRXF():
         ADB_Util.swipeCenterRight()
     CurrentStringRecAndTap("CNPC", [0, -50])
     CurrentStringRecAndTap("铁人先锋", [0, -10])
-    while not CurrentHasString("我的") :
-        continue
+    WaitForString("我的")
     CurrentStringRecAndTap("学习", [0, -10], -1)
     time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
-    ADB_Util.swipeCenterUp()
     for j in range(0, 3):
-        CurrentStringRecAndTapNearOne("立即考试", "青年答题")
+        CurrentStringRecAndTapNearOne("立即考试", "月月学")
         CurrentStringRecAndTap("开始答题")
         time.sleep(1)
         for i in range(0, 3):
-            CurrentFirstSubImageRecAndTap(config.CIRCLE_PATH2)
+            CurrentTapFirstCircleOrAllSquare()
             res = CurrentStringRecAndTap("下一题")
             if CurrentHasString("没有下一题了") or not res:
                 break
         CurrentStringRecAndTap("我要提交")
         CurrentStringRecAndTap("确认提交")
-        while not CurrentHasString("答题") :
-            continue
+        WaitForString("答题")
         ADB_Util.inputKeyBack()
     ADB_Util.inputKeyBack()
 
@@ -219,6 +244,9 @@ def SignInTRXF():
     CurrentStringRecAndTap("学习卡")
     CurrentStringRecAndTap("确认收藏")
     ADB_Util.inputKeyBack()
+    CurrentStringRecAndTap("当年积分")
+    WaitForString("每日签到")
+    ADB_Util.getScreenshot(config.RESULT_PATH)
     ADB_Util.backToHome()
 
 SignInCCBLife()
