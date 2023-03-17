@@ -182,7 +182,7 @@ def SignInCCBLife():
         CurrentFirstSubImageRecAndTap(config.X_PATH)
     res = []
     ADB_Util.swipeCenterUp()
-    res = CurrentStringRecAndTap("签到")
+    res = CurrentStringRecAndTap("签到", [0, 0], -1)
     time.sleep(1)
     while not res:
         ADB_Util.swipeCenterDown()
@@ -192,7 +192,8 @@ def SignInCCBLife():
         res = CurrentStringRecAndTap("签到")
     time.sleep(2)
     CurrentStringRecAndTap("立即签到")
-    CurrentStringRecAndTap("我知道了")
+    CurrentStringRecAndTap("知道了")
+    ADB_Util.getScreenshot(config.RESULT_PATH_CCBL)
     ADB_Util.backToHome()
     ADB_Util.inputKeyBack()
     time.sleep(1)
@@ -246,7 +247,7 @@ def SignInTRXF():
     ADB_Util.inputKeyBack()
     CurrentStringRecAndTap("当年积分")
     WaitForString("每日签到")
-    ADB_Util.getScreenshot(config.RESULT_PATH)
+    ADB_Util.getScreenshot(config.RESULT_PATH_TRXF)
     ADB_Util.backToHome()
 
 SignInCCBLife()
