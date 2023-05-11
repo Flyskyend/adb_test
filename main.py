@@ -32,10 +32,16 @@ def CurrentStringRecAndTapNearOne(str_to_tap, str_near, offset = [0, 0]):
             print("Can not find", str_near, "in current screen. Restarting...[" + str(time)+"]")
             continue
         near_coord = SR_Util.getCenter(str_near_coord[0][0])
+
         for c in str_coord:
             coord = SR_Util.getCenter(c[0])
             if coord[1] > near_coord[1] :
                 break
+
+        if coord[1] < near_coord[1] :
+            print("Can not find", str_to_tap, "under", str_near, "in current screen. Restarting...[" + str(time)+"]")
+            ADB_Util.swipeCenterUp()
+            continue
         ADB_Util.tap([coord[0] + offset[0], coord[1] + offset[1]])
         return str_coord
     else:
@@ -209,11 +215,13 @@ def SignInTRXF():
     CurrentStringRecAndTap("CNPC", [0, -50])
     CurrentStringRecAndTap("铁人先锋", [0, -10])
     WaitForString("我的")
+    
     CurrentStringRecAndTap("学习", [0, -10], -1)
     time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
     for j in range(0, 3):
-        CurrentStringRecAndTapNearOne("立即考试", "月月学")
+        # CurrentStringRecAndTapNearOne("立即考试", "月月学")
+        CurrentStringRecAndTapNearOne("立即考试", "青年答题")
         CurrentStringRecAndTap("开始答题")
         time.sleep(1)
         for i in range(0, 3):
@@ -250,6 +258,6 @@ def SignInTRXF():
     ADB_Util.getScreenshot(config.RESULT_PATH_TRXF)
     ADB_Util.backToHome()
 
-SignInCCBLife()
+# SignInCCBLife()
 SignInTRXF()
 
