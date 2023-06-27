@@ -1,9 +1,10 @@
+print("Start ADB auto operator...")
+
 from adb import ADB_Util
 from screenrec import SR_Util
 import config
 import time
-
-ADB_Util.getScreenSize()
+import global_vars
 
 def CurrentStringRecAndTap(str_to_tap, offset = [0, 0], which = 0):
     str_coord = []
@@ -87,7 +88,9 @@ def CurrentHasString(string):
     return False
 
 def WaitForString(string):
+    time = 0
     while not CurrentHasString(string) :
+        print("Waiting for string " + string + " ...[" + str(time)+"]")
         continue
 
 def CurrentTapAnswer():
@@ -258,6 +261,15 @@ def SignInTRXF():
     ADB_Util.getScreenshot(config.RESULT_PATH_TRXF)
     ADB_Util.backToHome()
 
-# SignInCCBLife()
+
+while not ADB_Util.getScreenSize():
+    time.sleep(1)
+    continue
+time.sleep(2)
+
+SignInCCBLife()
 SignInTRXF()
 
+# print(global_vars.TEXT_REC_RESULT)
+# str_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, "sss")
+# print(global_vars.TEXT_REC_RESULT)

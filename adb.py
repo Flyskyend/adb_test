@@ -49,10 +49,13 @@ class ADB_Util:
     def getScreenSize():
         print("### adb shell wm size")
         ret = os.popen("adb.exe shell wm size").read()
+        if not ret:
+            return False
         ADB_Util.SCREEN_SIZE = [ int(x) for x in re.findall(r": (.*)x(.*)\n", ret)[0]]
         ADB_Util.SCREEN_CENTER_X = int(ADB_Util.SCREEN_SIZE[0]/2)
         ADB_Util.SCREEN_CENTER_Y = int(ADB_Util.SCREEN_SIZE[1]/2)
         print("Screen Size:", ADB_Util.SCREEN_SIZE[0], "x", ADB_Util.SCREEN_SIZE[1], ", Center: (", ADB_Util.SCREEN_CENTER_X, ",", ADB_Util.SCREEN_CENTER_Y, ")")
+        return True
 
 
     # def openApp():

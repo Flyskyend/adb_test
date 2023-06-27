@@ -6,6 +6,7 @@ import easyocr
 from PIL import Image,ImageDraw
 from adb import ADB_Util
 import config
+import global_vars
 
 class SR_Util:
     ocrreader = easyocr.Reader(['ch_sim','en'], gpu=True) # this needs to run only once to load the model into memory
@@ -35,9 +36,9 @@ class SR_Util:
         return coords
     
     def getStringCoord(image_path, str):
-        result = SR_Util.ocrreader.readtext(image_path)
+        global_vars.TEXT_REC_RESULT = SR_Util.ocrreader.readtext(image_path)
         ret = []
-        for r in result:
+        for r in global_vars.TEXT_REC_RESULT:
             if str in r[1]:
                 print(r)
                 ret.append(r)
@@ -76,7 +77,8 @@ class SR_Util:
         
     def getScreenshotandRead(image_path):
         ADB_Util.getScreenshot(image_path)
-        return SR_Util.ocrreader.readtext(image_path)
+        global_vars.TEXT_REC_RESULT = SR_Util.ocrreader.readtext(image_path)
+        return global_vars.TEXT_REC_RESULT
     
     def getAnswer(image_path, read_result, isSingleChoice):
         for i in range(0, len(read_result)):
