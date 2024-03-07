@@ -19,13 +19,29 @@ def CurrentStringRecAndTap(str_to_tap, offset = [0, 0], which = 0):
         return str_coord
     else:
         return str_coord
+    
+
+def CurrentStringTap(str_to_tap, offset = [0, 0], which = 0):
+    str_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, str_to_tap, False)
+    for time in range(0, 5):
+        if not str_coord:
+            print("Can not find", str_to_tap, "in current screen. Restarting...[" + str(time)+"]")
+            ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
+            str_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, str_to_tap)
+            if not str_coord:
+                continue
+        coord = SR_Util.getCenter(str_coord[which][0])
+        ADB_Util.tap([coord[0] + offset[0], coord[1] + offset[1]])
+        return str_coord
+    else:
+        return str_coord
 
 def CurrentStringRecAndTapNearOne(str_to_tap, str_near, offset = [0, 0]):
     str_coord = []
     for time in range(0, 5):
         ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
         str_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, str_to_tap)
-        str_near_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, str_near)
+        str_near_coord = SR_Util.getStringCoord(config.SCREENSHOT_PATH, str_near, False)
         if not str_coord:
             print("Can not find", str_to_tap, "in current screen. Restarting...[" + str(time)+"]")
             continue
@@ -81,8 +97,9 @@ def CurrentTapFirstCircleOrAllSquare():
     else:
         return image_coord
 
-def CurrentHasString(string):
-    ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
+def CurrentHasString(string, rec = True):
+    if rec:
+        ADB_Util.getScreenshot(config.SCREENSHOT_PATH)
     if SR_Util.getStringCoord(config.SCREENSHOT_PATH, string) :
         return True
     return False
@@ -201,7 +218,11 @@ def SignInCCBLife():
         res = CurrentStringRecAndTap("签到")
     time.sleep(2)
     CurrentStringRecAndTap("立即签到")
-    CurrentStringRecAndTap("知道了")
+    if CurrentHasString("信用卡") :
+        CurrentStringTap("信用卡")
+        CurrentStringTap("确定领取")
+    else:
+        CurrentStringTap("知道了")
     ADB_Util.getScreenshot(config.RESULT_PATH_CCBL)
     ADB_Util.backToHome()
     ADB_Util.inputKeyBack()
@@ -219,12 +240,14 @@ def SignInTRXF():
     CurrentStringRecAndTap("铁人先锋", [0, -10])
     WaitForString("我的")
     
-    CurrentStringRecAndTap("学习", [0, -10], -1)
+    CurrentStringTap("学习", [0, -10], -1)
     time.sleep(1)
     CurrentStringRecAndTap("在线答题", [0, -10])
     for j in range(0, 3):
         # CurrentStringRecAndTapNearOne("立即考试", "月月学")
-        CurrentStringRecAndTapNearOne("立即考试", "青年答题")
+        res = CurrentStringRecAndTapNearOne("立即考试", "青年答题")
+        if not res:
+            ADB_Util.swipeCenterDown()
         CurrentStringRecAndTap("开始答题")
         time.sleep(1)
         for i in range(0, 3):
@@ -232,7 +255,8 @@ def SignInTRXF():
             res = CurrentStringRecAndTap("下一题")
             if CurrentHasString("没有下一题了") or not res:
                 break
-        CurrentStringRecAndTap("我要提交")
+        CurrentTapFirstCircleOrAllSquare()
+        CurrentStringTap("我要提交")
         CurrentStringRecAndTap("确认提交")
         WaitForString("答题")
         ADB_Util.inputKeyBack()
@@ -246,7 +270,7 @@ def SignInTRXF():
                 break
             time.sleep(1)
         CurrentTapAnswer()
-        CurrentStringRecAndTap("确认答案")
+        CurrentStringTap("确认答案")
         if i == 2:
             CurrentStringRecAndTap("完成")
         else:
@@ -256,6 +280,7 @@ def SignInTRXF():
     CurrentStringRecAndTap("学习卡")
     CurrentStringRecAndTap("确认收藏")
     ADB_Util.inputKeyBack()
+    ADB_Util.swipeCenterUp()
     CurrentStringRecAndTap("当年积分")
     WaitForString("每日签到")
     ADB_Util.getScreenshot(config.RESULT_PATH_TRXF)

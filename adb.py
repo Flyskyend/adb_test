@@ -39,8 +39,8 @@ class ADB_Util:
         ADB_Util.swipe(ADB_Util.SCREEN_CENTER_X - ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y, ADB_Util.SCREEN_CENTER_X + ADB_Util.SCREEN_CENTER_SWIPE_LENGTH, ADB_Util.SCREEN_CENTER_Y)
 
     # screenshot & download
-    def getScreenshot(path="./screenshot.jpg"):
-        time.sleep(2)
+    def getScreenshot(path="./screenshot.jpg", delay = 2):
+        time.sleep(delay)
         print("### adb pull /sdcard/screenshot.jpg " + path)
         os.system("adb.exe shell /system/bin/screencap -p /sdcard/screenshot.jpg")
         os.system("adb.exe pull /sdcard/screenshot.jpg " + path)

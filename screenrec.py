@@ -35,8 +35,9 @@ class SR_Util:
         # cv.imwrite("res.jpg",img_rgb)
         return coords
     
-    def getStringCoord(image_path, str):
-        global_vars.TEXT_REC_RESULT = SR_Util.ocrreader.readtext(image_path)
+    def getStringCoord(image_path, str, rec = True):
+        if rec :
+            global_vars.TEXT_REC_RESULT = SR_Util.ocrreader.readtext(image_path)
         ret = []
         for r in global_vars.TEXT_REC_RESULT:
             if str in r[1]:
